@@ -6,7 +6,7 @@
 A beautifulsoup-based web scraper and basic CV generator for Academia.edu profiles.
 
 Instructions:
-1. Run main.py file
-2. Paste url of any academia.edu profile
-3. Check project directory to find your CV
+1) Run main.py file
+2) Paste url of any academia.edu profile
+3) Check project directory to find your CV
 
