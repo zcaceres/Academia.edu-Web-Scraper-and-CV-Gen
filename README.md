@@ -10,3 +10,5 @@ Instructions:
 2. Paste url of any academia.edu profile
 3. Check project directory to find your CV
 
+Requires: pdfkit, beautifulsoup, and requests
+
