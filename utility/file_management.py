@@ -9,6 +9,7 @@ def create_text_file():
 
 # Formats Author object data and prints it into results.html file
 def add_prof_data_to_text_file(text_file, final_prof_info):
+    # text_file.write("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>")
     text_file.write("<h1>Name: {0}</h1>\n".format(final_prof_info.name.strip()))
     text_file.write("<img src='{0}'>\n".format(final_prof_info.portrait_url))
     text_file.write("<h2>Affiliation: {0}</h2>\n".format(final_prof_info.affiliation.strip()))

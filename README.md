@@ -10,3 +10,10 @@ Instructions:
 2. Paste url of any academia.edu profile
 3. Check project directory to find your CV
 
+Limited to ten elements per category (for example, top ten papers or 
+books).
+
+You will need to have [wkhtmltopdf](http://wkhtmltopdf.org/downloads.html)installed.
+
+Requires: pdfkit, beautifulsoup, and requests
+

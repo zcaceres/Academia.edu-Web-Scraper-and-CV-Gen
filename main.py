@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
+
 from classes import author, work
-from utility import file_management, pdf_generation, parse_paths
+from utility import file_management, parse_paths, pdf_generation
 
 """
             ACADEMIA.EDU WEB SCRAPER and AUTOMATIC (Basic) PDF CV GENERATOR
@@ -130,9 +131,10 @@ def make_work(title, abstract, download_url):
 
 
 
-new_work = []
-html_results_file = None
+
 if __name__ == '__main__':
+    new_work = []
+    html_results_file = None
     html_results_file = file_management.create_text_file()
     url = get_user()
     site_text = query_website(url)
@@ -140,5 +142,5 @@ if __name__ == '__main__':
     prof_name = extract_prof_data(soup)
     extract_work_data(soup)
     file_management.add_work_data_to_text_file(html_results_file, new_work)
-    html_results_file.close()
+    html_results_file.close()  # File must be closed for PDFKit to print
     pdf_generation.generate_pdf(prof_name)
