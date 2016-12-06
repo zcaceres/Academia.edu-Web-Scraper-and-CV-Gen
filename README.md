@@ -5,6 +5,8 @@
 
 A beautifulsoup-based web scraper and basic CV generator for Academia.edu profiles.
 
+Requires: pdfkit, beautifulsoup, and requests
+
 Instructions:
 1. Run main.py file
 2. Paste url of any academia.edu profile
@@ -14,6 +16,4 @@ Limited to ten elements per category (for example, top ten papers or
 books).
 
 You will need to have [wkhtmltopdf](http://wkhtmltopdf.org/downloads.html)installed.
-
-Requires: pdfkit, beautifulsoup, and requests
 
