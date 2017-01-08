@@ -1,8 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
+from .classes import work
+from .utility import file_management, parse_paths
 
-from classes import author, work
-from utility import file_management, parse_paths, pdf_generation
+from .classes import author
+from .utility import pdf_generation
 
 """
             ACADEMIA.EDU WEB SCRAPER and AUTOMATIC (Basic) PDF CV GENERATOR
@@ -10,20 +12,24 @@ from utility import file_management, parse_paths, pdf_generation
                                 www.python-a-thon.com
 """
 
+
 def get_user():
     url = input("Please paste the URL of the Academia.edu page: ")
-    return url
+    return url.strip()
 
-def query_website(username) :
+
+def query_website(url):
     r = requests.get('{0}'.format(url))
     return r.text
+
 
 def convert_html_to_soup(site_text):
     html = site_text
     soup = BeautifulSoup(html, 'html.parser')
     return soup
 
-def extract_prof_data(soup):
+
+def extract_prof_data(html_results_file, soup):
     name = None
     affiliation = None
     interests = None
@@ -58,7 +64,7 @@ def extract_prof_data(soup):
         bio = b.text
 
     # Makes a new Author object
-    make_author(name, affiliation, interests, portrait_url, bio)
+    make_author(html_results_file, name, affiliation, interests, portrait_url, bio)
     return name
 
 
@@ -70,7 +76,7 @@ def extract_work_data(soup):
 
     # Get Total Works
     total_works = soup.select(parse_paths.WORKS_PATH)
-    print ("–––––– AUTHOR HAS {0} TOTAL WORKS ––––––––".format(len(total_works)))
+    print("–––––– AUTHOR HAS {0} TOTAL WORKS ––––––––".format(len(total_works)))
     for work in total_works:
 
         # Get Titles
@@ -113,14 +119,14 @@ def extract_work_data(soup):
 def generate_work_lists (total_titles, total_abstracts, total_download_urls):
     counter = 0
     for t in total_titles:
-        print ("Making work at index {0} with title {1}".format(counter, t))
+        print("Making work at index {0} with title {1}".format(counter, t))
         temp_abs = total_abstracts[counter]
         temp_download = total_download_urls[counter]
         make_work(t, temp_abs, temp_download)
         counter += 1
 
 
-def make_author(name, affiliation, interests, portrait_url, bio):
+def make_author(html_results_file, name, affiliation, interests, portrait_url, bio):
     prof = author.Author(name, affiliation, interests, portrait_url, bio)  # Construct new author object
     file_management.add_prof_data_to_text_file(html_results_file, prof)
 
@@ -130,17 +136,30 @@ def make_work(title, abstract, download_url):
     print("NEW WORK is {0}".format(len(new_work)))
 
 
+new_work = []
+
+
+def process_input_to_request_pdf(url):
+    if not url:
+        url = get_user()
+        cv = process_pdf_request(url)
+        return cv
+    else:
+        cv = process_pdf_request(url)
+        return cv
+
+
+def process_pdf_request(url):
+    html_results_file = file_management.create_text_file()
+    site_text = query_website(url)
+    soup = convert_html_to_soup(site_text)
+    prof_name = extract_prof_data(html_results_file, soup)
+    extract_work_data(soup)
+    file_management.add_work_data_to_text_file(html_results_file, new_work)
+    html_results_file.close()  # File must be closed for PDFKit to print to file correctly
+    final_cv = pdf_generation.generate_pdf(prof_name)
+    return final_cv
 
 
 if __name__ == '__main__':
-    new_work = []
-    html_results_file = None
-    html_results_file = file_management.create_text_file()
-    url = get_user()
-    site_text = query_website(url)
-    soup = convert_html_to_soup(site_text)
-    prof_name = extract_prof_data(soup)
-    extract_work_data(soup)
-    file_management.add_work_data_to_text_file(html_results_file, new_work)
-    html_results_file.close()  # File must be closed for PDFKit to print
-    pdf_generation.generate_pdf(prof_name)
+    process_input_to_request_pdf()
